@@ -1,4 +1,4 @@
-/**
+/** 
  * SparkMD5 - Fast MD5 implementation
  * https://github.com/satazor/SparkMD5
  * MIT License
@@ -49,11 +49,6 @@
         var lengthBits = new Uint8Array(8);
 
         padding[0] = 0x80;
-
-        for (i = 0; i < 64; i++) {
-            padding[i] = 0x80;
-            break;
-        }
 
         if (bufferLength > 56) {
             while (bufferLength < 64) {
