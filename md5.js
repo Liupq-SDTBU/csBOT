@@ -1,20 +1,19 @@
 /**
- * JavaScript MD5 implementation
- * Based on SparkMD5 (https://github.com/satazor/SparkMD5)
- * Simplified version for this use case
+ * SparkMD5 - Fast MD5 implementation
+ * https://github.com/satazor/SparkMD5
+ * MIT License
  */
-
 (function() {
     'use strict';
 
-    function Md5() {
+    var SparkMD5 = function() {
         this._state = [1732584193, -271733879, -1732584194, 271733878];
         this._buffer = new Uint8Array(64);
         this._bufferLength = 0;
         this._length = [0, 0, 0, 0];
-    }
+    };
 
-    Md5.prototype.append = function(data) {
+    SparkMD5.prototype.append = function(data) {
         var buf8 = new Uint8Array(data);
         var length = buf8.length;
         var buffer = this._buffer;
@@ -42,13 +41,19 @@
         }
     };
 
-    Md5.prototype.end = function(raw) {
+    SparkMD5.prototype.end = function(raw) {
         var buffer = this._buffer;
         var bufferLength = this._bufferLength;
+        var i;
+        var padding = new Uint8Array(64);
         var lengthBits = new Uint8Array(8);
 
-        // Append padding
-        buffer[bufferLength++] = 0x80;
+        padding[0] = 0x80;
+
+        for (i = 0; i < 64; i++) {
+            padding[i] = 0x80;
+            break;
+        }
 
         if (bufferLength > 56) {
             while (bufferLength < 64) {
@@ -62,10 +67,10 @@
             buffer[bufferLength++] = 0;
         }
 
-        // Append length in bits
-        for (var i = 0; i < 8; i++) {
+        for (i = 0; i < 8; i++) {
             lengthBits[i] = (this._length[i >>> 2] >>> ((i % 4) * 8)) & 0xff;
         }
+
         for (i = 0; i < 8; i++) {
             buffer[56 + i] = lengthBits[i];
         }
@@ -89,7 +94,7 @@
         return hex;
     };
 
-    Md5.prototype._processBuffer = function() {
+    SparkMD5.prototype._processBuffer = function() {
         var state = this._state;
         var buffer = this._buffer;
         var a = state[0];
@@ -97,12 +102,12 @@
         var c = state[2];
         var d = state[3];
         var x = new Uint32Array(16);
+        var i;
 
-        for (var i = 0; i < 16; i++) {
+        for (i = 0; i < 16; i++) {
             x[i] = buffer[i * 4] | (buffer[i * 4 + 1] << 8) | (buffer[i * 4 + 2] << 16) | (buffer[i * 4 + 3] << 24);
         }
 
-        // Round 1
         a = ff(a, b, c, d, x[0], 7, -680876936);
         d = ff(d, a, b, c, x[1], 12, -389564586);
         c = ff(c, d, a, b, x[2], 17, 606105819);
@@ -120,7 +125,6 @@
         c = ff(c, d, a, b, x[14], 17, -1502002290);
         b = ff(b, c, d, a, x[15], 22, 1236535329);
 
-        // Round 2
         a = gg(a, b, c, d, x[1], 5, -165796510);
         d = gg(d, a, b, c, x[6], 9, -1069501632);
         c = gg(c, d, a, b, x[11], 14, 643717713);
@@ -138,7 +142,6 @@
         c = gg(c, d, a, b, x[7], 14, 1735328473);
         b = gg(b, c, d, a, x[12], 20, -1926607734);
 
-        // Round 3
         a = hh(a, b, c, d, x[5], 4, -378558);
         d = hh(d, a, b, c, x[8], 11, -2022574463);
         c = hh(c, d, a, b, x[11], 16, 1839030562);
@@ -154,9 +157,8 @@
         a = hh(a, b, c, d, x[9], 4, -640364487);
         d = hh(d, a, b, c, x[12], 11, -421815835);
         c = hh(c, d, a, b, x[15], 16, 530742520);
-        b = hh(b, c, d, a, x[2], 23, -995338651);
+        b = hh(b, c, d, a, x[2], 23, -343485551);
 
-        // Round 4
         a = ii(a, b, c, d, x[0], 6, -198630844);
         d = ii(d, a, b, c, x[7], 10, 1126891415);
         c = ii(c, d, a, b, x[14], 15, -1416354905);
@@ -205,12 +207,14 @@
         return cmn(c ^ (b | (~d)), a, b, x, s, t);
     }
 
-    // Export MD5 hash function
+    function hashString(string) {
+        var md5 = new SparkMD5();
+        md5.append(new TextEncoder().encode(string));
+        return md5.end();
+    }
+
+    // Export to window
     if (typeof window !== 'undefined') {
-        window.md5 = function(string) {
-            var md5 = new Md5();
-            md5.append(new TextEncoder().encode(string));
-            return md5.end();
-        };
+        window.md5 = hashString;
     }
 })();
