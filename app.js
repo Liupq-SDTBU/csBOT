@@ -53,21 +53,6 @@ function handleLogin() {
         // 跳转到扣子BOT
 
 
-        
-
-        // 登录成功，暂时不跳转，只显示调试信息
-console.log('=== BOT_PRIVATE_URL ===');
-console.log(BOT_PRIVATE_URL);
-console.log('=======================');
-
-// 显示在页面上
-document.getElementById('message-container').style.display = 'block';
-document.getElementById('message-text').innerHTML = `
-    <p><strong>登录成功！</strong></p>
-    <p><strong>BOT_PRIVATE_URL：</strong></p>
-    <p style="background: #f0f0f0; padding: 10px; border-radius: 5px; font-family: monospace;">${BOT_PRIVATE_URL}</p>
-    <p><em>（已临时禁用跳转，确认地址正确后再启用）</em></p>
-`;
         window.location.href = BOT_PRIVATE_URL;
     } else {
         // 登录失败
