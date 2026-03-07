@@ -51,6 +51,12 @@ function handleLogin() {
         }
 
         // 跳转到扣子BOT
+// 显示调试信息
+document.getElementById('debug-url').textContent = BOT_PRIVATE_URL;
+document.getElementById('debug-info').style.display = 'block';
+
+
+        
         window.location.href = BOT_PRIVATE_URL;
     } else {
         // 登录失败
