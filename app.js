@@ -68,7 +68,7 @@ document.getElementById('message-text').innerHTML = `
     <p style="background: #f0f0f0; padding: 10px; border-radius: 5px; font-family: monospace;">${BOT_PRIVATE_URL}</p>
     <p><em>（已临时禁用跳转，确认地址正确后再启用）</em></p>
 `;
-        //window.location.href = BOT_PRIVATE_URL;
+        window.location.href = BOT_PRIVATE_URL;
     } else {
         // 登录失败
         showError(CONFIG.errorMessage);
