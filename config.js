@@ -4,7 +4,7 @@
 
 // 扣子BOT的私有访问链接
 // 从扣子平台获取，格式如：https://www.coze.cn/store/bot/xxx?bid=xxx
-const BOT_PRIVATE_URL = 'blog.csdn.net/bigleo';
+const BOT_PRIVATE_URL = 'https://blog.csdn.net/bigleo';
 
 // 用户凭证配置（用户名: MD5哈希后的密码）
 // 使用工具生成MD5: https://www.md5hashgenerator.com/
